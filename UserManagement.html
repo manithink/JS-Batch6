@@ -166,9 +166,12 @@
                         $(".pages").addClass('hide');
                         $(".homePage").removeClass('hide');
                         console.log("selected user details object" + loggedInUserDetails);
-                        if(loggedInUserDetails.isAdmin)
+                        if(loggedInUserDetails.isAdmin){
                             $("#welcomeMessage").text("Welcome Admin " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
-                        else {
+                            for(i = 0; i < usersList.length; i++) {
+                                console.log(usersList[i]);
+                            }
+                        } else {
                             $("#userListTable tbody").append("<td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.email + "</td><td>" + loggedInUserDetails.age + "</td>");
                             $("#welcomeMessage").text("Welcome " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
                         }
