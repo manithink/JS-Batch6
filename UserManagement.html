@@ -112,6 +112,7 @@
                                 <th>LastName</th>
                                 <th>Email</th>
                                 <th>Age</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,14 +166,15 @@
                         $("#userListTable tbody").html(""); //Remove the existing content in the element
                         $(".pages").addClass('hide');
                         $(".homePage").removeClass('hide');
-                        console.log("selected user details object" + loggedInUserDetails);
+                        //console.log("selected user details object" + loggedInUserDetails);
                         if(loggedInUserDetails.isAdmin){
                             $("#welcomeMessage").text("Welcome Admin " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
                             for(i = 0; i < usersList.length; i++) {
-                                console.log(usersList[i]);
+                                $("#userListTable tbody").append("<tr id='" + usersList[i].userId + "'><td>" + usersList[i].firstName + "</td><td>" + usersList[i].lastName + "</td><td>"+ usersList[i].email + "</td><td>" + usersList[i].age +"</td><td>"+
+                                "<a href='javascript:void(0)' onclick='editUser(this)'>Edit</a><a href='javascript:void(0)' onclick='deleteUser(this)'>Delete</a></td></tr>");
                             }
                         } else {
-                            $("#userListTable tbody").append("<td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.email + "</td><td>" + loggedInUserDetails.age + "</td>");
+                            $("#userListTable tbody").append("<tr><td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.lastName + "</td><td>" + loggedInUserDetails.email + "</td><td>" + loggedInUserDetails.age + "</td><td></td></tr>");
                             $("#welcomeMessage").text("Welcome " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
                         }
                         $(".logoutLink").removeClass("hide");
@@ -191,6 +193,19 @@
                 $("#loginEmail, #loginPassword").val("");
             }
 
+            //Deleting the user
+            function deleteUser(thisObj){
+                console.log("Before deleted" + usersList);
+                var selectedUserElement = $(thisObj).parents("tr").attr("id");
+                $("#" + selectedUserElement).remove();
+                var index = usersList.findIndex(function(element){
+                    return element.userId == parseInt(selectedUserElement);
+                })
+                if(index !== -1){
+                    usersList.splice(index, 1);
+                }
+                console.log("After deleted" + usersList);
+            }
             $(document).ready(function(){
                 $(".createAccountLink").click(function(){
                     $(".pages").addClass('hide');
