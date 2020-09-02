@@ -1,6 +1,7 @@
 <html>
     <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <style>  
             .pageContent{
                 margin-top:70px !important;
@@ -122,8 +123,48 @@
                 </div>
             </div>
         </div>
+        
+  
+  <!-- Modal -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="editUserModalLabel">Edit User Details</h4>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="firstNameEdit" placeholder="Enter First Name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="lastNameEdit" placeholder="Enter Last Name">
+                </div>
+                <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="emailEdit" placeholder="Enter email">
+                </div>                
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="ageEdit" placeholder="Enter Your Age">
+                </div>
+                
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary"  onclick="editUser()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+        <!-- Latest compiled and minified JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script>           
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>           
             var user = {};
             var usersList = [];   
             var userIdCount = 1;
@@ -171,7 +212,7 @@
                             $("#welcomeMessage").text("Welcome Admin " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
                             for(i = 0; i < usersList.length; i++) {
                                 $("#userListTable tbody").append("<tr id='" + usersList[i].userId + "'><td>" + usersList[i].firstName + "</td><td>" + usersList[i].lastName + "</td><td>"+ usersList[i].email + "</td><td>" + usersList[i].age +"</td><td>"+
-                                "<a href='javascript:void(0)' onclick='editUser(this)'>Edit</a><a href='javascript:void(0)' onclick='deleteUser(this)'>Delete</a></td></tr>");
+                                "<a href='javascript:void(0)' onclick='openEditUserModal(this)'>Edit</a>&nbsp; &nbsp;<a href='javascript:void(0)' onclick='deleteUser(this)'>Delete</a></td></tr>");
                             }
                         } else {
                             $("#userListTable tbody").append("<tr><td>" + loggedInUserDetails.firstName + "</td><td>" + loggedInUserDetails.lastName + "</td><td>" + loggedInUserDetails.email + "</td><td>" + loggedInUserDetails.age + "</td><td></td></tr>");
@@ -205,6 +246,21 @@
                     usersList.splice(index, 1);
                 }
                 console.log("After deleted" + usersList);
+            }
+
+            //Method for opening the edit user modal popup
+            function openEditUserModal(thisObj){
+                $("#editUserModal").modal("show");
+                var selectedUserId = $(thisObj).parents("tr").attr("id");
+                var userDetail = usersList.filter(obj => {
+                    return obj.userId == parseInt(selectedUserId)
+                });
+                if(userDetail.length !== 0){
+                    $("#firstNameEdit").val(userDetail[0].firstName);
+                    $("#lastNameEdit").val(userDetail[0].lastName);
+                    $("#emailEdit").val(userDetail[0].email);
+                    $("#ageEdit").val(userDetail[0].age);
+                }
             }
             $(document).ready(function(){
                 $(".createAccountLink").click(function(){
