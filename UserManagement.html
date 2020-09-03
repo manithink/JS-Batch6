@@ -135,6 +135,7 @@
         </div>
         <div class="modal-body">
             <form>
+                <span class="selectedEditUserId hide"></span>
                 <div class="form-group">
                     <label for="firstName">First Name</label>
                     <input type="text" class="form-control" id="firstNameEdit" placeholder="Enter First Name">
@@ -211,7 +212,7 @@
                         if(loggedInUserDetails.isAdmin){
                             $("#welcomeMessage").text("Welcome Admin " + loggedInUserDetails.firstName + " " + loggedInUserDetails.lastName);
                             for(i = 0; i < usersList.length; i++) {
-                                $("#userListTable tbody").append("<tr id='" + usersList[i].userId + "'><td>" + usersList[i].firstName + "</td><td>" + usersList[i].lastName + "</td><td>"+ usersList[i].email + "</td><td>" + usersList[i].age +"</td><td>"+
+                                $("#userListTable tbody").append("<tr id='" + usersList[i].userId + "'><td class='firstNameColumn'>" + usersList[i].firstName + "</td><td class='lastNameColumn'>" + usersList[i].lastName + "</td><td class='emailColumn'>"+ usersList[i].email + "</td><td class='ageColumn'>" + usersList[i].age +"</td><td>"+
                                 "<a href='javascript:void(0)' onclick='openEditUserModal(this)'>Edit</a>&nbsp; &nbsp;<a href='javascript:void(0)' onclick='deleteUser(this)'>Delete</a></td></tr>");
                             }
                         } else {
@@ -252,6 +253,7 @@
             function openEditUserModal(thisObj){
                 $("#editUserModal").modal("show");
                 var selectedUserId = $(thisObj).parents("tr").attr("id");
+                $(".selectedEditUserId").text(selectedUserId);
                 var userDetail = usersList.filter(obj => {
                     return obj.userId == parseInt(selectedUserId)
                 });
@@ -261,6 +263,26 @@
                     $("#emailEdit").val(userDetail[0].email);
                     $("#ageEdit").val(userDetail[0].age);
                 }
+            }
+
+            function editUser(){
+                var selectedUserId = parseInt($(".selectedEditUserId").text());
+                $("tr#" + selectedUserId + " .firstNameColumn").text($("#firstNameEdit").val());
+                $("tr#" + selectedUserId + " .lastNameColumn").text($("#lastNameEdit").val());
+                $("tr#" + selectedUserId + " .emailColumn").text($("#emailEdit").val());
+                $("tr#" + selectedUserId + " .ageColumn").text($("#ageEdit").val());
+                var index = usersList.findIndex(function(element){
+                    return element.userId == parseInt(selectedUserId);
+                })
+                if(index !== -1){
+                    usersList[index].firstName = $("#firstNameEdit").val();
+                    usersList[index].lastName = $("#lastNameEdit").val();
+                    usersList[index].email = $("#emailEdit").val();
+                    usersList[index].age = $("#ageEdit").val();
+                } else{
+                    alert("The selected user not found");
+                }
+                $("#editUserModal").modal("hide");
             }
             $(document).ready(function(){
                 $(".createAccountLink").click(function(){
